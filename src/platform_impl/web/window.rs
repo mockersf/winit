@@ -62,7 +62,7 @@ impl Window {
             destroy_fn: Some(destroy_fn),
         };
 
-        backend::set_canvas_size(
+        backend::set_new_canvas_size(
             window.canvas.borrow().raw(),
             attr.inner_size.unwrap_or(Size::Logical(LogicalSize {
                 width: 1024.0,

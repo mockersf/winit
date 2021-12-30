@@ -94,11 +94,35 @@ pub fn set_canvas_size(raw: &HtmlCanvasElement, size: Size) {
     set_canvas_style_property(raw, "height", &format!("{}px", logical_size.height));
 }
 
+/// Set the size of a canvas. Unlike [`set_canvas_size`], the canvas style won't be updated if
+/// it's already set.
+pub fn set_new_canvas_size(raw: &HtmlCanvasElement, size: Size) {
+    let scale_factor = scale_factor();
+
+    let physical_size = size.to_physical::<u32>(scale_factor);
+    let logical_size = size.to_logical::<f64>(scale_factor);
+
+    raw.set_width(physical_size.width);
+    raw.set_height(physical_size.height);
+
+    set_canvas_style_property_if_not_set(raw, "width", &format!("{}px", logical_size.width));
+    set_canvas_style_property_if_not_set(raw, "height", &format!("{}px", logical_size.height));
+}
+
 pub fn set_canvas_style_property(raw: &HtmlCanvasElement, property: &str, value: &str) {
     let style = raw.style();
     style
         .set_property(property, value)
         .expect(&format!("Failed to set {}", property));
+}
+
+pub fn set_canvas_style_property_if_not_set(raw: &HtmlCanvasElement, property: &str, value: &str) {
+    let style = raw.style();
+    if style.get_property_value(property).unwrap().len() == 0 {
+        style
+            .set_property(property, value)
+            .expect(&format!("Failed to set {}", property));
+    }
 }
 
 pub fn is_fullscreen(canvas: &HtmlCanvasElement) -> bool {
