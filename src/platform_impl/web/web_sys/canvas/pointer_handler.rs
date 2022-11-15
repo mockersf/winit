@@ -75,15 +75,13 @@ impl PointerHandler {
         M: 'static + FnMut(i32, MouseButton, ModifiersState),
         T: 'static + FnMut(i32, PhysicalPosition<f64>, Force),
     {
-        let canvas = canvas_common.raw.clone();
         self.on_pointer_release = Some(canvas_common.add_user_event(
             "pointerup",
             move |event: PointerEvent| {
                 if event.pointer_type() == "touch" {
                     touch_handler(
                         event.pointer_id(),
-                        event::touch_position(&event, &canvas)
-                            .to_physical(super::super::scale_factor()),
+                        event::touch_position(&event).to_physical(super::super::scale_factor()),
                         Force::Normalized(event.pressure() as f64),
                     );
                 } else {
@@ -113,8 +111,7 @@ impl PointerHandler {
                 if event.pointer_type() == "touch" {
                     touch_handler(
                         event.pointer_id(),
-                        event::touch_position(&event, &canvas)
-                            .to_physical(super::super::scale_factor()),
+                        event::touch_position(&event).to_physical(super::super::scale_factor()),
                         Force::Normalized(event.pressure() as f64),
                     );
                 } else {
@@ -144,7 +141,6 @@ impl PointerHandler {
         M: 'static + FnMut(i32, PhysicalPosition<f64>, PhysicalPosition<f64>, ModifiersState),
         T: 'static + FnMut(i32, PhysicalPosition<f64>, Force),
     {
-        let canvas = canvas_common.raw.clone();
         self.on_cursor_move = Some(canvas_common.add_event(
             "pointermove",
             move |event: PointerEvent| {
@@ -155,8 +151,7 @@ impl PointerHandler {
                     }
                     touch_handler(
                         event.pointer_id(),
-                        event::touch_position(&event, &canvas)
-                            .to_physical(super::super::scale_factor()),
+                        event::touch_position(&event).to_physical(super::super::scale_factor()),
                         Force::Normalized(event.pressure() as f64),
                     );
                 } else {
@@ -175,15 +170,13 @@ impl PointerHandler {
     where
         F: 'static + FnMut(i32, PhysicalPosition<f64>, Force),
     {
-        let canvas = canvas_common.raw.clone();
         self.on_touch_cancel = Some(canvas_common.add_event(
             "pointercancel",
             move |event: PointerEvent| {
                 if event.pointer_type() == "touch" {
                     handler(
                         event.pointer_id(),
-                        event::touch_position(&event, &canvas)
-                            .to_physical(super::super::scale_factor()),
+                        event::touch_position(&event).to_physical(super::super::scale_factor()),
                         Force::Normalized(event.pressure() as f64),
                     );
                 }
