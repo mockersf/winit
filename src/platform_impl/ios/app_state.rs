@@ -569,6 +569,11 @@ pub fn did_finish_launching(mtm: MainThreadMarker) {
     }
 }
 
+pub fn wakeup(mtm: MainThreadMarker) {
+    let mut this = AppState::get_mut(mtm);
+    this.waker.start();
+}
+
 // AppState::did_finish_launching handles the special transition `Init`
 pub fn handle_wakeup_transition(mtm: MainThreadMarker) {
     let mut this = AppState::get_mut(mtm);

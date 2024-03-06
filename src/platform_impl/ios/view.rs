@@ -541,6 +541,8 @@ declare_class!(
         #[method(applicationWillEnterForeground:)]
         fn will_enter_foreground(&self, application: &UIApplication) {
             self.send_occluded_event_for_all_windows(application, false);
+            let mtm = MainThreadMarker::new().unwrap();
+            app_state::wakeup(mtm);
         }
 
         #[method(applicationDidEnterBackground:)]
